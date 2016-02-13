@@ -1,6 +1,7 @@
 package com.lis.investmentdataclient.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jhm.investmentdata.model.PriceRecord;
@@ -9,12 +10,48 @@ import com.jhm.investmentdata.model.Ticker;
 public class TickerDecorator {
 	
 	private Ticker ticker;
+	private List<PriceRecord> priceRecords;
+	private List<Double> adjustedPrices;
 
+	
 	public TickerDecorator(Ticker ticker) {
 		this.ticker = ticker;
+		priceRecords = ticker.getPriceRecords();
+		adjustedPrices = new ArrayList<Double>();
+		cacheAdjustedPrices();
 	}
 	
 	
+	private void cacheAdjustedPrices() {
+		adjustedPrices.add(1.0);
+		double initialDividendSum = 0.0;
+		double initialSplitRatio = 1.0;
+		calculateSubsequentAdjustedPrices(1, initialDividendSum, initialSplitRatio);
+	}
+
+
+	private void calculateSubsequentAdjustedPrices(int index, double initialDividendSum,
+			double initialSplitRatio) {
+		if(index >= priceRecords.size())
+			return;
+		else
+			addAdjustedPricesToCollection(index, initialDividendSum, initialSplitRatio);
+	}
+
+
+	private void addAdjustedPricesToCollection(int index,
+			double initialDividendSum, double initialSplitRatio) {
+		PriceRecord pr = priceRecords.get(index);
+		double closePrice = pr.getClosePrice();
+		double splitRatio = initialSplitRatio * pr.getSplitRatio();
+		double dividendSum = initialDividendSum + (pr.getDividend() * splitRatio);
+		double normalizingDivisor = priceRecords.get(0).getClosePrice();
+		double finalValue = (closePrice * splitRatio + dividendSum) / normalizingDivisor;
+		adjustedPrices.add(finalValue);
+		calculateSubsequentAdjustedPrices(index + 1, dividendSum, splitRatio);
+	}
+
+
 	private PriceRecord getConditionalPriceRecord(Date tradeDate) {
 		PriceRecord pr = new PriceRecord();
 		pr.setTicker(ticker);
@@ -25,7 +62,7 @@ public class TickerDecorator {
 	
 	private double getClosePriceOn(Date tradeDate) {
 		int index = getIndexOfPriceRecordOn(tradeDate);
-		double price = ticker.getPriceRecords().get(index).getClosePrice();
+		double price = priceRecords.get(index).getClosePrice();
 		return price;
 	}
 	
@@ -33,7 +70,7 @@ public class TickerDecorator {
 	private int getIndexOfPriceRecordOn(Date tradeDate) {
 		Date adjustedTradeDate = getAdjustedTradeDate(tradeDate);
 		PriceRecord pr = getConditionalPriceRecord(adjustedTradeDate);
-		return ticker.getPriceRecords().indexOf(pr);
+		return priceRecords.indexOf(pr);
 	}
 	
 	
@@ -42,12 +79,11 @@ public class TickerDecorator {
 		int startIndex = getIndexOfPriceRecordOn(startDate);
 		double splitRatioProduct = 1.0;
 		for(int i = finalIndex; i > startIndex; i--)
-			splitRatioProduct *= ticker.getPriceRecords().get(i).getSplitRatio();
+			splitRatioProduct *= priceRecords.get(i).getSplitRatio();
 		return splitRatioProduct;
 	}
 	
 	private double getSumOfDividends(Date startDate, Date endDate) {
-		List<PriceRecord> priceRecords = ticker.getPriceRecords();
 		int finalIndex = getIndexOfPriceRecordOn(endDate);
 		int startIndex = getIndexOfPriceRecordOn(startDate);
 		double sumOfDividends = 0.0;
@@ -60,9 +96,9 @@ public class TickerDecorator {
 	
 	private Date getAdjustedTradeDate(Date tradeDate) {
 		PriceRecord pr = getConditionalPriceRecord(tradeDate);
-		if (tradeDate.before(ticker.getPriceRecords().get(0).getTradeDate()))
+		if (tradeDate.before(priceRecords.get(0).getTradeDate()))
 			throw new IllegalArgumentException();
-		if (ticker.getPriceRecords().contains(pr))
+		if (priceRecords.contains(pr))
 			return tradeDate;
 		else
 			return getAdjustedTradeDate(Date.valueOf(tradeDate.toLocalDate().minusDays(1)));
@@ -74,7 +110,7 @@ public class TickerDecorator {
 		int startObservationIndex = finalObservationIndex - period;
 		double averageSum = 0;
 		for (int i = finalObservationIndex; i > startObservationIndex; i--)
-			averageSum += (ticker.getPriceRecords().get(i).getClosePrice() / period);
+			averageSum += (priceRecords.get(i).getClosePrice() / period);
 		return averageSum;
 	}
 
@@ -84,6 +120,16 @@ public class TickerDecorator {
 		double endValue = getClosePriceOn(endDate) * getProductOfSplitRatios(startDate, endDate)
 				+ getSumOfDividends(startDate, endDate);
 		return endValue / startValue - 1;
+	}
+
+
+	public double getNormalizedSimpleMovingAverage(Date tradeDate, int period) {
+		int finalObservationIndex = getIndexOfPriceRecordOn(tradeDate);
+		int startObservationIndex = finalObservationIndex - period;
+		double averageSum = 0;
+		for (int i = finalObservationIndex; i > startObservationIndex; i--)
+			averageSum += (adjustedPrices.get(i) / period);
+		return averageSum;
 	}
 
 }

@@ -44,5 +44,13 @@ public class TickerDecoratorUnitTest {
 		double tickerReturn = testTickerDecorator.getReturnBetween(startDate, endDate);
 		assertEquals(0.071411, tickerReturn, 0.00001);
 	}
+	
+	
+	@Test
+	public void shouldHaveCorrectNormalizedSimpleMovingAverage() throws Exception {
+		Date tradeDate = Date.valueOf("2012-06-27");
+		double testNormalizedMovingAverage = testTickerDecorator.getNormalizedSimpleMovingAverage(tradeDate, 50);
+		assertEquals(1.247938, testNormalizedMovingAverage, 0.00001);
+	}
 
 }
