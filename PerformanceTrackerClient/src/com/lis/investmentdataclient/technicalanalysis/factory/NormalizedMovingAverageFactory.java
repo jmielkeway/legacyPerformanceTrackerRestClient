@@ -2,8 +2,7 @@ package com.lis.investmentdataclient.technicalanalysis.factory;
 
 import java.sql.Date;
 
-import com.jhm.investmentdata.model.Ticker;
-import com.lis.investmentdataclient.model.TechnicalTicker;
+import com.lis.investmentdataclient.model.Trackable;
 import com.lis.investmentdataclient.technicalanalysis.DegenerateMovingAverage;
 import com.lis.investmentdataclient.technicalanalysis.ExpNormalizedMovingAverage;
 import com.lis.investmentdataclient.technicalanalysis.NormalizedMovingAverage;
@@ -11,33 +10,31 @@ import com.lis.investmentdataclient.technicalanalysis.SimpleNormalizedMovingAver
 
 public class NormalizedMovingAverageFactory {
 
-	public static NormalizedMovingAverage getSimpleInstance(Ticker ticker,
+	public static NormalizedMovingAverage getSimpleInstance(Trackable trackable,
 			Date tradeDate, int period) {
-		TechnicalTicker technicalTicker = new TechnicalTicker(ticker);
-		if(technicalTicker.isPeriodTooLargeForMovingAverageCalculation(period, tradeDate))
+		if(trackable.isPeriodTooLargeForMovingAverageCalculation(period, tradeDate))
 			return new DegenerateMovingAverage(period);
 		else
-			return getSimpleNormalizedMovingAverage(technicalTicker, tradeDate, period);
+			return getSimpleNormalizedMovingAverage(trackable, tradeDate, period);
 	}
 
 	private static SimpleNormalizedMovingAverage getSimpleNormalizedMovingAverage(
-			TechnicalTicker technicalTicker, Date tradeDate, int period) {
-		double movingAverageValue = technicalTicker.getNormalizedSimpleMovingAverage(tradeDate, period);
+			Trackable trackable, Date tradeDate, int period) {
+		double movingAverageValue = trackable.getNormalizedSimpleMovingAverage(tradeDate, period);
 		return new SimpleNormalizedMovingAverage(period, movingAverageValue);
 	}
 
-	public static NormalizedMovingAverage getExpInstance(Ticker ticker,
+	public static NormalizedMovingAverage getExpInstance(Trackable trackable,
 			Date tradeDate, int period) {
-		TechnicalTicker technicalTicker = new TechnicalTicker(ticker);
-		if(technicalTicker.isPeriodTooLargeForMovingAverageCalculation(period, tradeDate))
+		if(trackable.isPeriodTooLargeForMovingAverageCalculation(period, tradeDate))
 			return new DegenerateMovingAverage(period);
 		else
-			return getExpNormalizedMovingAverage(technicalTicker, tradeDate, period);
+			return getExpNormalizedMovingAverage(trackable, tradeDate, period);
 	}
 
 	private static ExpNormalizedMovingAverage getExpNormalizedMovingAverage(
-			TechnicalTicker technicalTicker, Date tradeDate, int period) {
-		double movingAverageValue = technicalTicker.getNormalizedExpMovingAverage(tradeDate, period);
+			Trackable trackable, Date tradeDate, int period) {
+		double movingAverageValue = trackable.getNormalizedExpMovingAverage(tradeDate, period);
 		return new ExpNormalizedMovingAverage(period, movingAverageValue);
 	}
 

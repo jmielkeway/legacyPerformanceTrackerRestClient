@@ -15,12 +15,20 @@ public class TechnicalTickerUnitTest {
 	
 	TechnicalTicker technicalTicker;
 	
+	
 	@Before
 	public void setUp() throws Exception {
 		Ticker restTicker = TickerBuilder.getCachedRestTicker();
 		technicalTicker = new TechnicalTicker(restTicker);
 	}
 
+	
+	@Test
+	public void shouldHaveCorrectReferenceName() throws Exception {
+		assertEquals("RSP", technicalTicker.getReferenceName());
+	}
+
+	
 	@Test
 	public void shouldHaveCorrectNormalizedExponentialMovingAverage() throws Exception {
 		Date tradeDate = Date.valueOf("2007-07-16");
@@ -100,7 +108,7 @@ public class TechnicalTickerUnitTest {
 		assertFalse(technicalTicker.isPeriodTooLargeForMovingAverageCalculation(824, tradeDate));
 		assertTrue(technicalTicker.isPeriodTooLargeForMovingAverageCalculation(825, tradeDate));
 	}
-	
+
 	
 	@Test
 	public void shouldGetAnnualizedReturnFigure() throws Exception {

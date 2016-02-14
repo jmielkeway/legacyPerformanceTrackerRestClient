@@ -8,23 +8,25 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jhm.investmentdata.model.Ticker;
+import com.lis.investmentdataclient.model.TechnicalTicker;
 import com.lis.investmentdataclient.technicalanalysis.NormalizedMovingAverage;
 import com.lis.investmentdataclient.testbuilder.TickerBuilder;
 
 public class NormalizedMovingAverageFactoryUnitTest {
 	
-	Ticker restTicker;
+	TechnicalTicker technicalTicker;
 	
 	@Before
 	public void setUp() throws Exception {
-		restTicker = TickerBuilder.getCachedRestTicker();
+		Ticker restTicker = TickerBuilder.getCachedRestTicker();
+		technicalTicker = new TechnicalTicker(restTicker);
 	}
 	
 	
 	private void doSimpleMovingAverageTest(int period, double expectedValue) {
 		Date tradeDate = Date.valueOf("2010-05-03");
 		NormalizedMovingAverage snma = NormalizedMovingAverageFactory
-				.getSimpleInstance(restTicker, tradeDate, period);
+				.getSimpleInstance(technicalTicker, tradeDate, period);
 		double actualDouble = snma.getNormalizedMovingAverageValue();
 		assertEquals(actualDouble, expectedValue, 0.0001);
 	}
@@ -44,7 +46,7 @@ public class NormalizedMovingAverageFactoryUnitTest {
 	private void doExponentialMovingAverageTest(int period, double expectedValue) {
 		Date tradeDate = Date.valueOf("2008-04-12");
 		NormalizedMovingAverage enma = NormalizedMovingAverageFactory
-				.getExpInstance(restTicker, tradeDate, period);
+				.getExpInstance(technicalTicker, tradeDate, period);
 		double actualDouble = enma.getNormalizedMovingAverageValue();
 		assertEquals(actualDouble, expectedValue, 0.00001);
 	}

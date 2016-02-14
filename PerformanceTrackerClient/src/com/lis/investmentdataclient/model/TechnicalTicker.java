@@ -8,7 +8,7 @@ import java.util.List;
 import com.jhm.investmentdata.model.PriceRecord;
 import com.jhm.investmentdata.model.Ticker;
 
-public class TechnicalTicker {
+public class TechnicalTicker implements Trackable{
 	
 	private Ticker ticker;
 	private List<PriceRecord> priceRecords;
@@ -20,6 +20,12 @@ public class TechnicalTicker {
 		priceRecords = ticker.getPriceRecords();
 		adjustedPrices = new ArrayList<Double>();
 		cacheAdjustedPrices();
+	}
+	
+	
+	@Override
+	public String getReferenceName() {
+		return ticker.getSymbol();
 	}
 	
 	
@@ -84,6 +90,7 @@ public class TechnicalTicker {
 		return splitRatioProduct;
 	}
 	
+	
 	private double getSumOfDividends(Date startDate, Date endDate) {
 		int finalIndex = getIndexOfPriceRecordOn(endDate);
 		int startIndex = getIndexOfPriceRecordOn(startDate);
@@ -106,7 +113,8 @@ public class TechnicalTicker {
 	}
 
 	
-	private double getReturnBetween(Date startDate, Date endDate) {
+	@Override
+	public double getReturnBetween(Date startDate, Date endDate) {
 		double  startValue = getClosePriceOn(startDate);
 		double endValue = getClosePriceOn(endDate) * getProductOfSplitRatios(startDate, endDate)
 				+ getSumOfDividends(startDate, endDate);
@@ -114,6 +122,7 @@ public class TechnicalTicker {
 	}
 
 
+	@Override
 	public double getNormalizedSimpleMovingAverage(Date tradeDate, int period) {
 		int finalObservationIndex = getIndexOfPriceRecordOn(tradeDate);
 		int startObservationIndex = finalObservationIndex - period;
@@ -124,6 +133,7 @@ public class TechnicalTicker {
 	}
 
 
+	@Override
 	public double getNormalizedExpMovingAverage(Date tradeDate, int period) {
 		int finalObservationIndex = getIndexOfPriceRecordOn(tradeDate);
 		double expDecay = 2.0 / (period + 1);
@@ -135,18 +145,21 @@ public class TechnicalTicker {
 	}
 
 
+	@Override
 	public boolean isDateBeforeTradable(Date tradeDate) {
 		Date firstDate = priceRecords.get(0).getTradeDate();
 		return tradeDate.before(firstDate);
 	}
 
 
+	@Override
 	public boolean isPeriodTooLargeForMovingAverageCalculation(int period, Date tradeDate) {
 		int minimum = getIndexOfPriceRecordOn(tradeDate) + 1;
 		return period > minimum;
 	}
 
 
+	@Override
 	public double getAnnualizedReturnBetween(Date startDate, Date endDate) {
 		int years = getYearsToAnnualizeFor(startDate, endDate);
 		if(years > 1)

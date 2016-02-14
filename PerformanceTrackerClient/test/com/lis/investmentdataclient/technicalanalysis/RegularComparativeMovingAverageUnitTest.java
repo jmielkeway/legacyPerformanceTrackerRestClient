@@ -8,25 +8,27 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jhm.investmentdata.model.Ticker;
+import com.lis.investmentdataclient.model.TechnicalTicker;
 import com.lis.investmentdataclient.technicalanalysis.factory.NormalizedMovingAverageFactory;
 import com.lis.investmentdataclient.testbuilder.TickerBuilder;
 
 public class RegularComparativeMovingAverageUnitTest {
 	
-	Ticker restTicker;
+	TechnicalTicker technicalTicker;
 
 	
 	@Before
 	public void setUp() throws Exception {
-		restTicker = TickerBuilder.getCachedRestTicker();
+		Ticker restTicker = TickerBuilder.getCachedRestTicker();
+		technicalTicker = new TechnicalTicker(restTicker);
 	}
 	
 	
 	private void doCompartiveMovingAverageTest(Date tradeDate, int shorter, int longer, String expectedString) {
 		NormalizedMovingAverage shorterMa = NormalizedMovingAverageFactory
-				.getSimpleInstance(restTicker, tradeDate, shorter);
+				.getSimpleInstance(technicalTicker, tradeDate, shorter);
 		NormalizedMovingAverage longerMa = NormalizedMovingAverageFactory
-				.getSimpleInstance(restTicker, tradeDate, longer);
+				.getSimpleInstance(technicalTicker, tradeDate, longer);
 		ComparativeMovingAverageIndicator cmai = new RegularComparativeMovingAverageIndicator(shorterMa, longerMa);
 		String actualString = cmai.getIndicatorString();
 		assertEquals(expectedString, actualString);

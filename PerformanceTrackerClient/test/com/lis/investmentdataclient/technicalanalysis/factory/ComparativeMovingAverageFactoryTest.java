@@ -8,27 +8,29 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jhm.investmentdata.model.Ticker;
+import com.lis.investmentdataclient.model.TechnicalTicker;
 import com.lis.investmentdataclient.technicalanalysis.ComparativeMovingAverageIndicator;
 import com.lis.investmentdataclient.technicalanalysis.NormalizedMovingAverage;
 import com.lis.investmentdataclient.testbuilder.TickerBuilder;
 
 public class ComparativeMovingAverageFactoryTest {
 	
-	Ticker restTicker;
+	TechnicalTicker technicalTicker;
 	
 	
 	@Before
 	public void setUp() throws Exception {
-		restTicker = TickerBuilder.getCachedRestTicker();
+		Ticker restTicker = TickerBuilder.getCachedRestTicker();
+		technicalTicker = new TechnicalTicker(restTicker);
 	}
 	
 	
 	private void doComparativeMovingAverageFromFactoryTest(Date tradeDate, int shorterPeriod,
 			int longerPeriod, String expectedString) {
 		NormalizedMovingAverage shorter = NormalizedMovingAverageFactory
-				.getSimpleInstance(restTicker, tradeDate, shorterPeriod);
+				.getExpInstance(technicalTicker, tradeDate, shorterPeriod);
 		NormalizedMovingAverage longer = NormalizedMovingAverageFactory
-				.getSimpleInstance(restTicker, tradeDate, longerPeriod);
+				.getExpInstance(technicalTicker, tradeDate, longerPeriod);
 		ComparativeMovingAverageIndicator cmai = new ComparativeMovingAverageFactory()
 				.getInstance(shorter, longer);
 		String actualString = cmai.getIndicatorString();
