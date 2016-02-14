@@ -1,20 +1,21 @@
 package com.lis.investmentdataclient.model;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.jhm.investmentdata.model.PriceRecord;
 import com.jhm.investmentdata.model.Ticker;
 
-public class TickerDecorator {
+public class TechnicalTicker {
 	
 	private Ticker ticker;
 	private List<PriceRecord> priceRecords;
 	private List<Double> adjustedPrices;
 
 	
-	public TickerDecorator(Ticker ticker) {
+	public TechnicalTicker(Ticker ticker) {
 		this.ticker = ticker;
 		priceRecords = ticker.getPriceRecords();
 		adjustedPrices = new ArrayList<Double>();
@@ -103,19 +104,9 @@ public class TickerDecorator {
 		else
 			return getAdjustedTradeDate(Date.valueOf(tradeDate.toLocalDate().minusDays(1)));
 	}
-	
-
-	public double getSimpleMovingAverage(Date tradeDate, int period) {
-		int finalObservationIndex = getIndexOfPriceRecordOn(tradeDate);
-		int startObservationIndex = finalObservationIndex - period;
-		double averageSum = 0;
-		for (int i = finalObservationIndex; i > startObservationIndex; i--)
-			averageSum += (priceRecords.get(i).getClosePrice() / period);
-		return averageSum;
-	}
 
 	
-	public double getReturnBetween(Date startDate, Date endDate) {
+	private double getReturnBetween(Date startDate, Date endDate) {
 		double  startValue = getClosePriceOn(startDate);
 		double endValue = getClosePriceOn(endDate) * getProductOfSplitRatios(startDate, endDate)
 				+ getSumOfDividends(startDate, endDate);
@@ -130,6 +121,45 @@ public class TickerDecorator {
 		for (int i = finalObservationIndex; i > startObservationIndex; i--)
 			averageSum += (adjustedPrices.get(i) / period);
 		return averageSum;
+	}
+
+
+	public double getNormalizedExpMovingAverage(Date tradeDate, int period) {
+		int finalObservationIndex = getIndexOfPriceRecordOn(tradeDate);
+		double expDecay = 2.0 / (period + 1);
+		Date initializationDate = priceRecords.get(period-1).getTradeDate();
+		double expMovingAverage = getNormalizedSimpleMovingAverage(initializationDate, period);
+		for(int i = period; i <= finalObservationIndex; i++) 
+			expMovingAverage = (expMovingAverage * (1-expDecay)) + (expDecay * adjustedPrices.get(i));
+		return expMovingAverage;
+	}
+
+
+	public boolean isDateBeforeTradable(Date tradeDate) {
+		Date firstDate = priceRecords.get(0).getTradeDate();
+		return tradeDate.before(firstDate);
+	}
+
+
+	public boolean isPeriodTooLargeForMovingAverageCalculation(int period, Date tradeDate) {
+		int minimum = getIndexOfPriceRecordOn(tradeDate) + 1;
+		return period > minimum;
+	}
+
+
+	public double getAnnualizedReturnBetween(Date startDate, Date endDate) {
+		int years = getYearsToAnnualizeFor(startDate, endDate);
+		if(years > 1)
+			return Math.pow(1 + getReturnBetween(startDate, endDate), 1.0 / years) - 1;
+		else
+			return getReturnBetween(startDate, endDate);
+	}
+
+
+	private int getYearsToAnnualizeFor(Date startDate, Date endDate) {
+		LocalDate beginning = startDate.toLocalDate();
+		LocalDate ending = endDate.toLocalDate();
+		return ending.getYear() - beginning.getYear();
 	}
 
 }
