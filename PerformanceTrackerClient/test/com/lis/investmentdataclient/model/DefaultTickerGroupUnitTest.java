@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.lis.investmentdataclient.rest.CsvTickerStringPropertyReader;
+import com.lis.investmentdataclient.rest.OrderedListOfRestTickers;
+
 public class DefaultTickerGroupUnitTest {
 	
 	DefaultTickerGroup tickerGroup;
@@ -13,7 +16,9 @@ public class DefaultTickerGroupUnitTest {
 	@Before
 	public void setUp() throws Exception {
 		String groupName = "Market Achievers";
-		tickerGroup = new DefaultTickerGroup(groupName);
+		TickerStringPropertyReader reader = new CsvTickerStringPropertyReader(groupName);
+		OrderedListOfTickers list = new OrderedListOfRestTickers(reader);
+		tickerGroup = new DefaultTickerGroup(groupName, list);
 	}
 	
 	

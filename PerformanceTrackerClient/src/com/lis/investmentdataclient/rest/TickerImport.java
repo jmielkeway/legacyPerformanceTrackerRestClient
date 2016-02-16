@@ -1,8 +1,5 @@
 package com.lis.investmentdataclient.rest;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import org.springframework.http.HttpEntity;
@@ -12,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.jhm.investmentdata.model.Ticker;
+import com.lis.investmentdataclient.global.StaticGlobalProperties;
 
 public class TickerImport {
 
@@ -22,9 +20,9 @@ public class TickerImport {
 	static {
 		setTimeZoneToGmtToFixJacksonDeserializationIssues();
 		REST_TEMPLATE = new RestTemplate();
-		Properties props = getPropertiesFromResourceFile();
-		DOMAIN_STRING = props.getProperty("domain.leadingString");
+		DOMAIN_STRING = StaticGlobalProperties.getRestDomainString();
 	}
+	
 	
 	private static void setTimeZoneToGmtToFixJacksonDeserializationIssues() {
 		TimeZone timeZone = TimeZone.getTimeZone("GMT");
@@ -32,46 +30,21 @@ public class TickerImport {
 	}
 	
 	
-	private static Properties getPropertiesFromResourceFile() {
-		Properties props = new Properties();
-		InputStream is = TickerImport.class.getClassLoader().getResourceAsStream("domain.properties");
-		attemptToLoadPropertiesFromFile(props, is);
-		return props;
-	}
-	
-	
-	private static void attemptToLoadPropertiesFromFile(Properties props, InputStream is) {
-		try {
-			props.load(is);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-			System.out.println("Properties file not found");
-		}
-	}
-	
-	
 	public static Ticker getRestTicker(String tickerSymbol, Class<? extends Ticker> assetType) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Accept", "application/json;charset=UTF-8");
 		HttpEntity<String> requestEntity = new HttpEntity<String>(headers);
-		return getRestTickerUsingDomainStringAndRequest(requestEntity, tickerSymbol, assetType);
+		return getRestTickerUsingHeadersAndRequestEntity(requestEntity, tickerSymbol, assetType);
 	}
 	
 	
-	private static Ticker getRestTickerUsingDomainStringAndRequest(HttpEntity<String> requestEntity, 
+	private static Ticker getRestTickerUsingHeadersAndRequestEntity(HttpEntity<String> requestEntity, 
 			String tickerSymbol, Class<? extends Ticker> assetType) {
-		String domainString = DOMAIN_STRING + "/tickers/{symbol}";
+		String restString = DOMAIN_STRING + "/tickers/{symbol}";
 		ResponseEntity<? extends Ticker> responseEntity = REST_TEMPLATE
-				.exchange(domainString, HttpMethod.GET,
+				.exchange(restString, HttpMethod.GET,
 						requestEntity, assetType, tickerSymbol);
 		Ticker ticker = responseEntity.getBody();
-		//fixJacksonSqlDateDeserializationIssues(ticker);
 		return ticker;
 	}
-
-	
-//	private static void fixJacksonSqlDateDeserializationIssues(Ticker ticker) {
-//		for (PriceRecord pr : ticker.getPriceRecords())
-//			pr.setTradeDate(Date.valueOf(Date.valueOf(pr.getTradeDate().toLocalDate().plusDays(1)).toString()));
-//	}
 }

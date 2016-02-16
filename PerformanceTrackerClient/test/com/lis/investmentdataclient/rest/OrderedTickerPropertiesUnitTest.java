@@ -8,28 +8,30 @@ import org.junit.Test;
 import com.jhm.investmentdata.model.Etf;
 import com.jhm.investmentdata.model.MutualFund;
 import com.jhm.investmentdata.model.Ticker;
+import com.lis.investmentdataclient.model.TickerStringPropertyReader;
 
 public class OrderedTickerPropertiesUnitTest {
 	
-	OrderedTickerProperties properties;
+	OrderedListOfRestTickers list;
 	
 	@Before
 	public void setUp() throws Exception {
-		String tickerType = "MarketAchievers";
-		properties = new OrderedTickerProperties(tickerType);
+		String tickerType = "Market Achievers";
+		TickerStringPropertyReader reader = new CsvTickerStringPropertyReader(tickerType);
+		list = new OrderedListOfRestTickers(reader);
 	}
 	
 	@Test
 	public void shouldHaveCorrectNumberOfStoredTickerProperties() throws Exception {
-		assertEquals(4, properties.getNumberOfTickerProperties());
+		assertEquals(4, list.getNumberOfTickers());
 	}
 	
 	@Test
 	public void shouldHaveCorrectTickerAtIndex() throws Exception {
-		Ticker firstTicker = properties.getTickerFromPropertiesAtIndex(0);
-		Ticker secondTicker = properties.getTickerFromPropertiesAtIndex(1);
-		Ticker thirdTicker = properties.getTickerFromPropertiesAtIndex(2);
-		Ticker fourthTicker = properties.getTickerFromPropertiesAtIndex(3);
+		Ticker firstTicker = list.getTickerAtIndex(0);
+		Ticker secondTicker = list.getTickerAtIndex(1);
+		Ticker thirdTicker = list.getTickerAtIndex(2);
+		Ticker fourthTicker = list.getTickerAtIndex(3);
 		assertEquals("RSP", firstTicker.getSymbol());
 		assertEquals(Etf.class, firstTicker.getClass());
 		assertEquals("FTA", secondTicker.getSymbol());
