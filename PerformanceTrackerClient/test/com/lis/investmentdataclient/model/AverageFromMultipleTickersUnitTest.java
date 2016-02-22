@@ -12,9 +12,9 @@ import com.jhm.investmentdata.model.MutualFund;
 import com.jhm.investmentdata.model.Ticker;
 import com.lis.investmentdataclient.rest.TickerImport;
 
-public class TickerGroupAverageUnitTest {
+public class AverageFromMultipleTickersUnitTest {
 	
-	TickerGroupAverage average;
+	AverageFromMultipleTickers average;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -22,7 +22,7 @@ public class TickerGroupAverageUnitTest {
 		Ticker cpeaxTicker = TickerImport.getRestTicker("CPEAX", MutualFund.class);
 		TechnicalTicker rsp = new TechnicalTicker(rspTicker);
 		TechnicalTicker cpeax = new TechnicalTicker(cpeaxTicker);
-		average = new TickerGroupAverage(rsp, cpeax);
+		average = new AverageFromMultipleTickers(rsp, cpeax);
 	}
 	
 	@Test

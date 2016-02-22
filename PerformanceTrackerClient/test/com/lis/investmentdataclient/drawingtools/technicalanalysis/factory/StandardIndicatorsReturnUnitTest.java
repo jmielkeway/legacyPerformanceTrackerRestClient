@@ -12,7 +12,7 @@ import com.lis.investmentdataclient.drawingtools.technicalanalysis.ReturnIndicat
 import com.lis.investmentdataclient.drawingtools.technicalanalysis.factory.StandardIndicators;
 import com.lis.investmentdataclient.model.TechnicalTicker;
 import com.lis.investmentdataclient.model.Trackable;
-import com.lis.investmentdataclient.testbuilder.TickerBuilder;
+import com.lis.investmentdataclient.testbuilder.TestTickerFactory;
 
 public class StandardIndicatorsReturnUnitTest {
 	
@@ -21,7 +21,7 @@ public class StandardIndicatorsReturnUnitTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Ticker restTicker = TickerBuilder.getCachedRestTicker();
+		Ticker restTicker = TestTickerFactory.getCachedRestTicker();
 		trackable = new TechnicalTicker(restTicker);
 		observationDate = Date.valueOf("2012-10-02");
 	}

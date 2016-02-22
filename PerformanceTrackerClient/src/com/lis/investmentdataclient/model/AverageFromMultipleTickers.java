@@ -2,16 +2,16 @@ package com.lis.investmentdataclient.model;
 
 import java.sql.Date;
 
-public class TickerGroupAverage implements Trackable {
+public class AverageFromMultipleTickers implements Trackable {
 
 	private final String groupName;
-	private TechnicalTicker[] tickers;
+	private Trackable[] trackables;
 	
-	public TickerGroupAverage(TechnicalTicker ... tickers) {
+	public AverageFromMultipleTickers(Trackable ... allTechnicalTickers) {
 		groupName = "Group Average";
-		if(tickers.length == 0)
+		if(allTechnicalTickers.length == 0)
 			throw new IllegalArgumentException();
-		this.tickers = tickers;
+		this.trackables = allTechnicalTickers;
 	}
 
 	@Override
@@ -22,8 +22,8 @@ public class TickerGroupAverage implements Trackable {
 	@Override
 	public double getReturnBetween(Date startDate, Date endDate) {
 		double investmentReturn = 0;
-		for(TechnicalTicker tt : tickers)
-			investmentReturn += (tt.getReturnBetween(startDate, endDate)) / tickers.length;
+		for(Trackable tt : trackables)
+			investmentReturn += (tt.getReturnBetween(startDate, endDate)) / trackables.length;
 		return investmentReturn;
 	}
 
@@ -44,7 +44,7 @@ public class TickerGroupAverage implements Trackable {
 	@Override
 	public double getNormalizedSimpleMovingAverage(Date tradeDate, int period) {
 		double normalizedSma = 0.0;
-		for (TechnicalTicker tt : tickers)
+		for (Trackable tt : trackables)
 			normalizedSma += Math.sqrt(tt.getNormalizedSimpleMovingAverage(tradeDate, period));
 		return normalizedSma;
 	}
@@ -52,14 +52,14 @@ public class TickerGroupAverage implements Trackable {
 	@Override
 	public double getNormalizedExpMovingAverage(Date tradeDate, int period) {
 		double normalizedEma = 0.0;
-		for (TechnicalTicker tt : tickers)
+		for (Trackable tt : trackables)
 			normalizedEma += Math.sqrt(tt.getNormalizedExpMovingAverage(tradeDate, period));
 		return normalizedEma;
 	}
 
 	@Override
 	public boolean isDateBeforeTradable(Date tradeDate) {
-		for(TechnicalTicker tt : tickers)
+		for(Trackable tt : trackables)
 			if(tt.isDateBeforeTradable(tradeDate))
 				return true;
 		return false;
@@ -68,7 +68,7 @@ public class TickerGroupAverage implements Trackable {
 	@Override
 	public boolean isPeriodTooLargeForMovingAverageCalculation(int period,
 			Date tradeDate) {
-		for(TechnicalTicker tt : tickers)
+		for(Trackable tt : trackables)
 			if(tt.isPeriodTooLargeForMovingAverageCalculation(period, tradeDate))
 				return true;
 		return false;

@@ -13,7 +13,7 @@ import com.lis.investmentdataclient.drawingtools.technicalanalysis.NormalizedMov
 import com.lis.investmentdataclient.drawingtools.technicalanalysis.factory.ComparativeMovingAverageFactory;
 import com.lis.investmentdataclient.drawingtools.technicalanalysis.factory.NormalizedMovingAverageFactory;
 import com.lis.investmentdataclient.model.TechnicalTicker;
-import com.lis.investmentdataclient.testbuilder.TickerBuilder;
+import com.lis.investmentdataclient.testbuilder.TestTickerFactory;
 
 public class ComparativeMovingAverageFactoryTest {
 	
@@ -22,7 +22,7 @@ public class ComparativeMovingAverageFactoryTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Ticker restTicker = TickerBuilder.getCachedRestTicker();
+		Ticker restTicker = TestTickerFactory.getCachedRestTicker();
 		technicalTicker = new TechnicalTicker(restTicker);
 	}
 	

@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.jhm.investmentdata.model.Ticker;
-import com.lis.investmentdataclient.testbuilder.TickerBuilder;
+import com.lis.investmentdataclient.testbuilder.TestTickerFactory;
 
 public class TechnicalTickerUnitTest {
 	
@@ -18,7 +18,7 @@ public class TechnicalTickerUnitTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		Ticker restTicker = TickerBuilder.getCachedRestTicker();
+		Ticker restTicker = TestTickerFactory.getCachedRestTicker();
 		technicalTicker = new TechnicalTicker(restTicker);
 	}
 

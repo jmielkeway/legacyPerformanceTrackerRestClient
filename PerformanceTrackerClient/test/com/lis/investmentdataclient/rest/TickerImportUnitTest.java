@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.jhm.investmentdata.model.Etf;
 import com.jhm.investmentdata.model.Ticker;
-import com.lis.investmentdataclient.testbuilder.TickerBuilder;
+import com.lis.investmentdataclient.testbuilder.TestTickerFactory;
 
 public class TickerImportUnitTest {
 	
@@ -17,7 +17,7 @@ public class TickerImportUnitTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		restTicker = TickerBuilder.getCachedRestTicker();
+		restTicker = TestTickerFactory.getCachedRestTicker();
 	}
 	
 	@Test

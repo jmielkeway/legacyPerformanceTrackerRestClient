@@ -3,9 +3,14 @@ package com.lis.investmentdataclient.drawingtools.colorbased;
 public abstract class BaseFont implements Font {
 	
 	private Color color;
+	private int size;
 	
 	protected void setColor(Color color) {
 		this.color = color;
+	}
+	
+	protected void setFontSize(int size) {
+		this.size = size;
 	}
 
 	@Override
@@ -28,18 +33,24 @@ public abstract class BaseFont implements Font {
 		return color.getAlpha();
 	}
 	
+	
+	@Override
+	public int getFontSize() {
+		return this.size;
+	}
+	
 	@Override
 	public boolean equals(Object object) {
 		if (object == null || object.getClass() != getClass())
 			return false;
 		BaseFont f = (BaseFont) object;
-		return this.color.equals(f.color);
+		return this.color.equals(f.color) && this.size == f.size;
  	}
 	
 	
 	@Override
 	public int hashCode() {
-		return 3 * color.hashCode();
+		return 3 * color.hashCode() * size;
 	}
 
 }
