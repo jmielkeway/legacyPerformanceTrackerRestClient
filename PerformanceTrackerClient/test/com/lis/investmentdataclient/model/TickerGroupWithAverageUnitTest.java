@@ -32,15 +32,15 @@ public class TickerGroupWithAverageUnitTest {
 	@Test
 	public void shouldHaveCorrectNumberOfTrackables() throws Exception {
 		int expectedNumber = 5;
-		int actualNumber = group.getNumberOfTrackables();
+		int actualNumber = group.getTrackables().length;
 		assertEquals(expectedNumber, actualNumber);
 	}
 	
 	
 	@Test
 	public void trackableReferenceShouldHaveCorrectProperties() throws Exception {
-		Trackable single = group.getTrackableByIndexNumber(2);
-		Trackable average = group.getTrackableByIndexNumber(group.getNumberOfTrackables() - 1);
+		Trackable single = group.getTrackables()[2];
+		Trackable average = group.getTrackables()[group.getTrackables().length - 1];
 		assertEquals("CPEAX", single.getReferenceName());
 		assertEquals("Group Average", average.getReferenceName());
 	}

@@ -29,16 +29,10 @@ public class DefaultTickerGroup implements TickerGroup {
 	public String getName() {
 		return groupName;
 	}
-	
-	
-	@Override
-	public int getNumberOfTrackables() {
-		return trackables.size();
-	}
 
-	
+
 	@Override
-	public Trackable getTrackableByIndexNumber(int index) {
-		return trackables.get(index);
+	public Trackable[] getTrackables() {
+		return trackables.toArray(new Trackable[trackables.size()]);
 	}
 }

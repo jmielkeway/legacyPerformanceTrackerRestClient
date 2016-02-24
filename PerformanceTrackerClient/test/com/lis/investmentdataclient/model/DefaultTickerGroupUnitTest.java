@@ -30,13 +30,13 @@ public class DefaultTickerGroupUnitTest {
 	
 	@Test
 	public void shouldHaveCorrectNumberOfTrackableEntities() throws Exception {
-		assertEquals(4, tickerGroup.getNumberOfTrackables());
+		assertEquals(4, tickerGroup.getTrackables().length);
 	}
 	
 	
 	@Test
 	public void shouldReturnCorrectTrackableInstance() throws Exception {
-		Trackable trackable = tickerGroup.getTrackableByIndexNumber(2);
+		Trackable trackable = tickerGroup.getTrackables()[2];
 		assertEquals("CPEAX", trackable.getReferenceName());
 	}
 }

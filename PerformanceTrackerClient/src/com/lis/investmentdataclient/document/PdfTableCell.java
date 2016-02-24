@@ -1,8 +1,8 @@
 package com.lis.investmentdataclient.document;
 
 
+import com.lis.investmentdataclient.drawingtools.colorbased.BackgroundColor;
 import com.lis.investmentdataclient.drawingtools.colorbased.Font;
-import com.lis.investmentdataclient.model.Trackable;
 
 public interface PdfTableCell {
 	
@@ -10,8 +10,9 @@ public interface PdfTableCell {
 	
 	public Font getCellFont();
 	
-	public PdfTableCell cloneCell();
+	public int getColumnWidth();
 	
-	public void setTrackable(Trackable trackable);
+	public BackgroundColor getBackgroundColor();
 	
+	public void setBackgroundColor(BackgroundColor backgroundColor);
 }

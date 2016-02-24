@@ -28,7 +28,7 @@ public abstract class AbstractTickerGroupFactoryUnitTest {
 	public void shouldHaveCorrectGroupSize() throws Exception {
 		TickerGroup tg = getFactory().getInstance("Market Achievers");
 		int expectedSize = getExpectedGroupSize();
-		int actualSize = tg.getNumberOfTrackables();
+		int actualSize = tg.getTrackables().length;
 		assertEquals(expectedSize, actualSize);
 	}
 
