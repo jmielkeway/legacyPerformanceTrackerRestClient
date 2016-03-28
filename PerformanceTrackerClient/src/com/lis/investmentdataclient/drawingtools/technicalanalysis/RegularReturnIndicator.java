@@ -23,7 +23,7 @@ public class RegularReturnIndicator implements ReturnIndicator {
 
 	@Override
 	public String getIndicatorString() {
-		return String.format("%.2f", annualizedReturn*100) + "%";
+		return String.format("%.1f", annualizedReturn*100) + "%";
 	}
 
 	@Override

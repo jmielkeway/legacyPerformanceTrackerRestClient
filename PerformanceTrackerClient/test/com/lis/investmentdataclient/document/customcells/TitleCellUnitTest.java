@@ -8,7 +8,7 @@ import com.lis.investmentdataclient.drawingtools.colorbased.GenericFont;
 public class TitleCellUnitTest extends AbstractPdfTableCellUnitTest {
 	
 	String title = "Market Achievers";
-	Font font = new GenericFont(100, 100, 100);
+	Font font = new GenericFont(100, 100, 100, 12);
 	int columnCount = 13;
 
 	@Override

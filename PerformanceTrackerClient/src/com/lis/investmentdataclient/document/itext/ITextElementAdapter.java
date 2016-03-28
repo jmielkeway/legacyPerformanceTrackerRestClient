@@ -9,6 +9,7 @@ import com.lis.investmentdataclient.document.PdfElement;
 import com.lis.investmentdataclient.document.PdfImage;
 import com.lis.investmentdataclient.document.PdfLine;
 import com.lis.investmentdataclient.document.PdfParagraph;
+import com.lis.investmentdataclient.document.PdfTable;
 
 public class ITextElementAdapter implements ElementVisitor {
 	
@@ -41,7 +42,14 @@ public class ITextElementAdapter implements ElementVisitor {
 		Paragraph paragraph = new Paragraph();
 		paragraph.add(iTextLine);
 		paragraph.setSpacingAfter(spacingAfter);
+		paragraph.setAlignment(Element.ALIGN_CENTER);
 		iTextElement = paragraph;
+	}
+
+
+	@Override
+	public void visit(PdfTable table) {
+		iTextElement = ITextTableAdapter.getITextTable(table);
 	}
 	
 	

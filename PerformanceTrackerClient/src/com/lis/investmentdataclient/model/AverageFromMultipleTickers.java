@@ -38,7 +38,7 @@ public class AverageFromMultipleTickers implements Trackable {
 	private int getYearsForAnnualization(Date startDate, Date endDate) {
 		int start = startDate.toLocalDate().getYear();
 		int end = endDate.toLocalDate().getYear();
-		return end - start;
+		return end - start == 0 ? 1 : end-start;
 	}
 
 	@Override

@@ -18,7 +18,9 @@ public class SymbolCell implements TrackableBasedCell {
 	
 	@Override
 	public Font getCellFont() {
-		return new NeutralFont();
+		Font font = new NeutralFont();
+		font.setFontSize(9);
+		return font;
 	}
 
 	

@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.Paragraph;
 import com.lis.investmentdataclient.document.PdfParagraph;
@@ -89,4 +90,11 @@ public class ITextParagraphAdapterUnitTest {
 		assertEquals(expectedSpacingAfter, actualSpacingAfter, 0.0001);
 	}
 
+	
+	@Test
+	public void shouldHaveCorrectAlignment() throws Exception {
+		int expectedAlignment = Element.ALIGN_LEFT;
+		int actualAlignment = paragraph.getAlignment();
+		assertEquals(expectedAlignment, actualAlignment);
+	}
 }

@@ -3,6 +3,7 @@ package com.lis.investmentdataclient.document.customtables;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lis.investmentdataclient.document.ElementVisitor;
 import com.lis.investmentdataclient.document.PdfTable;
 import com.lis.investmentdataclient.document.PdfTableRow;
 import com.lis.investmentdataclient.document.customrows.PerformanceAssessmentTableRow;
@@ -63,12 +64,24 @@ public class TickerGroupTable implements PdfTable {
 	@Override
 	public double[] getColumnWidths() {
 		return new double [] { 
-				1.0/13, 1.0/13, 1.0/13,
-				1.0/13, 1.0/13, 1.0/13,
-				1.0/13, 1.0/13, 1.0/13,
-				1.0/13, 1.0/13, 1.0/13, 
-				1.0/13
+				0.1, .9/12, .9/12,
+				.085, .065, .9/12,
+				.9/12, .9/12, .9/12,
+				.9/12, .9/12, .9/12, 
+				.9/12
 		};
+	}
+
+
+	@Override
+	public void accept(ElementVisitor visitor) {
+		visitor.visit(this);
+	}
+
+
+	@Override
+	public double getTrailingSpacing() {
+		return 0;
 	}
 
 }

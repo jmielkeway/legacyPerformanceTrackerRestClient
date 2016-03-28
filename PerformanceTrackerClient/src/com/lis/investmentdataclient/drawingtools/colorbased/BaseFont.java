@@ -9,7 +9,9 @@ public abstract class BaseFont implements Font {
 		this.color = color;
 	}
 	
-	protected void setFontSize(int size) {
+	
+	@Override
+	public void setFontSize(int size) {
 		this.size = size;
 	}
 

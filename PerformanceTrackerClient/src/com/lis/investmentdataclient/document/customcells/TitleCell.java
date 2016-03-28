@@ -25,7 +25,8 @@ public class TitleCell implements PdfTableCell {
 
 	@Override
 	public Font getCellFont() {
-		return new GenericFont(255,255,255);
+		Font font = new GenericFont(255,255,255, 16);
+		return font;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.lis.investmentdataclient.document.PdfDocument;
 import com.lis.investmentdataclient.document.PdfElement;
+import com.lis.investmentdataclient.document.PdfPage;
 
 public class ITextPdfDocument implements PdfDocument {
 	
@@ -19,7 +20,7 @@ public class ITextPdfDocument implements PdfDocument {
 	
 	
 	protected ITextPdfDocument() {
-		document = new Document(PageSize.LETTER, 50, 50, 50, 50);
+		document = new Document(PageSize.LETTER.rotate(), 50, 50, 50, 50);
 	}
 	
 	public ITextPdfDocument(String fileName) {
@@ -27,10 +28,8 @@ public class ITextPdfDocument implements PdfDocument {
 		try {
 			writer = PdfWriter.getInstance(document, new FileOutputStream(fileName + ".pdf"));
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -62,8 +61,11 @@ public class ITextPdfDocument implements PdfDocument {
 
 
 	@Override
-	public boolean addPage() {
-		return document.newPage();
+	public boolean addPage(PdfPage page) {
+		boolean newPage = document.newPage();
+		for(PdfElement p : page.getPdfElementsInPage())
+			newPage = add(p);
+		return newPage;
 	}
 
 
@@ -71,6 +73,4 @@ public class ITextPdfDocument implements PdfDocument {
 	public int getNumberOfPages() {
 		return writer.getPageNumber();
 	}
-
-
 }

@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.lis.investmentdataclient.document.PdfImage;
 
@@ -17,6 +18,7 @@ public class ITextImageAdapter {
 			float percentX = image.getPercentageWidth();
 			Image iTextImage = Image.getInstance(url);
 			iTextImage.scalePercent(percentX, percentY);
+			iTextImage.setAlignment(Element.ALIGN_CENTER);
 			return iTextImage;
 		} catch (BadElementException e) {
 			throw new RuntimeException();

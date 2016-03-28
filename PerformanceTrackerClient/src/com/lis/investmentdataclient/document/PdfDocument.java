@@ -8,8 +8,9 @@ public interface PdfDocument {
 	
 	public void close();
 
-	public boolean addPage();
+	public boolean addPage(PdfPage page);
 
 	public int getNumberOfPages();
+	
 
 }

@@ -2,8 +2,8 @@ package com.lis.investmentdataclient.document.customcells;
 
 import com.lis.investmentdataclient.document.PdfTableCell;
 import com.lis.investmentdataclient.drawingtools.colorbased.BackgroundColor;
-import com.lis.investmentdataclient.drawingtools.colorbased.DefaultFont;
 import com.lis.investmentdataclient.drawingtools.colorbased.Font;
+import com.lis.investmentdataclient.drawingtools.colorbased.GenericFont;
 
 public class GenericCell implements PdfTableCell {
 
@@ -21,7 +21,7 @@ public class GenericCell implements PdfTableCell {
 
 	@Override
 	public Font getCellFont() {
-		return new DefaultFont();
+		return new GenericFont(0,0,0,9);
 	}
 
 	@Override

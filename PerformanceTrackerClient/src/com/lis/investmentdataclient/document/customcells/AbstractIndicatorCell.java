@@ -44,7 +44,9 @@ public abstract class AbstractIndicatorCell implements TrackableBasedCell {
 	
 	@Override
 	public Font getCellFont() {
-		return indicator.getFont();
+		Font font = indicator.getFont();
+		font.setFontSize(9);
+		return font;
 	}
 
 	

@@ -1,6 +1,6 @@
 package com.lis.investmentdataclient.document;
 
-public interface PdfTable {
+public interface PdfTable extends PdfElement {
 	
 	public PdfTableRow[] getRows();
 

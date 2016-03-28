@@ -8,4 +8,6 @@ public interface ElementVisitor {
 	
 	public void visit(PdfLine line);
 
+	public void visit(PdfTable table);
+
 }
